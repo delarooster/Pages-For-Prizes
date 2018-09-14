@@ -1,0 +1,151 @@
+﻿@{
+    ViewBag.Title = "AddFamilyMember";
+    Layout = "~/Views/Shared/_LayoutTheme.cshtml";
+}
+@model AddFamilyMemberViewModel
+
+<section class="mainContent full-width clearfix">
+    <div class="container">
+
+
+        @* Success/Failure Alerts *@
+        @if (Model.AddSuccessState == AddFamilyMemberViewModel.SuccessState.Success)
+        {
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <strong>Success!</strong> A new family member has been successfully added!
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+        else if (Model.AddSuccessState == AddFamilyMemberViewModel.SuccessState.Failed)
+        {
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <strong>Oops!</strong> Something went wrong.  Please try again.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+        else if (Model.AddSuccessState == AddFamilyMemberViewModel.SuccessState.NotAuthorized)
+        {
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <strong>Unauthorized!</strong> You do not have permission to perform this action.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+
+
+        @*Page Header *@
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="sectionTitle text-center">
+                    <h2>
+                        <span class="shape shape-left bg-color-4"></span>
+                        <span>Family Members</span>
+                        <span class="shape shape-right bg-color-4"></span>
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        @* Add Family Member Form *@
+        <div class="row">
+            <div class="col-md-4 col-md col-sm-6 col-xs-12">
+                <div class="panel panel-default formPanel">
+                    <div class="panel-heading bg-color-3 border-color-3">
+                        <h3 class="panel-title">New Family Member</h3>
+                    </div>
+                    <div class="panel-body border-color-3">
+                        <form action="/Home/AddFamilyMember" method="post" role="form">
+
+
+                            <div style="margin-bottom:10px">
+                                <label for="UserRole">User's Role</label><br />
+                                <label class="radio-inline" for="inlineCheckbox1">
+                                    <input type="radio" name="RoleID" id="inlineCheckbox1" value="3" checked> Child
+                                </label>
+
+                                <label class="radio-inline" for="inlineCheckbox2">
+                                    <input type="radio" name="RoleID" id="inlineCheckbox2" value="2">Parent
+                                </label>
+                            </div>
+
+                            <div class="form-group formField">
+                                @*<label for="FirstName">First Name</label>*@
+                                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control form-control-sm border-color-2", placeholder = "First Name" })
+                                @Html.ValidationMessageFor(m => m.FirstName)
+                            </div>
+                            <div class="form-group formField">
+                                @*<label for="LastName">Last Name</label>*@
+                                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control form-control-sm border-color-2", placeholder = "Last Name" })
+                                @Html.ValidationMessageFor(m => m.LastName)
+                            </div>
+
+                            <div class="form-group formField">
+                                @*<label for="UserName">User Name</label>*@
+                                @Html.TextBoxFor(m => m.Username, new { @class = "form-control form-control-sm border-color-2", placeholder = "User Name" })
+                                @Html.ValidationMessageFor(m => m.Username)
+                            </div>
+                            <div class="form-group formField">
+                                @*<label for="Password">Password</label>*@
+                                @Html.TextBoxFor(m => m.Password, new { @class = "form-control form-control-sm border-color-2", placeholder = "Password" })
+                                @Html.ValidationMessageFor(m => m.Password)
+                            </div>
+
+
+                            <div style="text-align:center">
+                                <button type="submit" class="btn btn-md btn-primary bg-color-3 border-color-3">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+
+            @* Your Family Members Table *@
+            <div class="table-responsive ">
+                <table class="table table-curved border-color-5">
+                    <thead>
+                        <tr class="border-color-4" style="color:white;">
+                            <th class="col-sm-2 bg-color-5 border-color-5">First Name</th>
+                            <th class="col-sm-2 bg-color-5 border-color-5">Last Name</th>
+                            <th class="col-sm-2 bg-color-5 border-color-5">Username</th>
+                            <th class="col-sm-2 bg-color-5 border-color-5">User Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.FamilyMembersList)
+                        {
+
+                            <tr>
+
+                                <td class="border-color-5">@item.FirstName</td>
+                                <td class="border-color-5">@item.LastName</td>
+                                <td class="border-color-5">@item.Username</td>
+                                @if (item.RoleID == 2)
+                                {
+                                    <td class="border-color-5">Parent</td>
+                                }
+                                else
+                                {
+                                    <td class="border-color-5">Child</td>
+                                }
+
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+
+        </div>
+    </div>
+</section>

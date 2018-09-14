@@ -1,0 +1,196 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutTheme.cshtml";
+    //Html.EnableClientValidation(false);
+
+    User currentUser = new Capstone.Web.User();
+
+    foreach (var user in Model.UserList)
+    {
+        if (user.ID == Model.UserID)
+        {
+            currentUser = user;
+        }
+    }
+
+
+}
+@model UserActivityViewModel
+
+<style>
+    option:disabled {
+        color: red;
+        font-weight: bold;
+    }
+</style>
+
+<section class="mainContent full-width clearfix">
+    <div class="container">
+
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="sectionTitle text-center">
+                    <h2>
+                        <span class="shape shape-left bg-color-4"></span>
+                        <span>@currentUser.FirstName's Activity</span>
+                        <span class="shape shape-right bg-color-4"></span>
+                    </h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="panel panel-default formPanel">
+                    <div class="panel-heading bg-color-3 border-color-3">
+                        <h3 class="panel-title">Add Reading Log</h3>
+                    </div>
+                    <div class="panel-body border-color-3">
+                        <form action="/Home/AddReadingLog" method="post" role="form">
+                            <label for="SelectBook">Select a Current Book</label>
+                            <div class="dropGeneral roundOne border-color-2">
+                                <input type="hidden" name="UserID" value="@currentUser.ID">
+                                @{TempData["UserID"] = currentUser.RoleID;}
+                                <select name="BookID" id="BookID" class="select-drop">
+                                    @foreach (var item in Model.ActiveBooks)
+                                    {
+                                        <option value="@item.ID">@item.Title</option>
+                                    }
+                                    @*<option disabled>- - - - Inactive Books - - - -</option>*@
+                                    @*@foreach (var item in Model.InactiveBooks)
+                                    {
+                                        <option value="@item.ID">@item.Title</option>
+                                    }*@
+                                </select>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="form-group formField">
+                                        <label for="AddReadingHours">Hours:</label>
+                                        @Html.TextBoxFor(m => m.HoursRead, new { @class = "form-control form-control-sm border-color-2" })
+                                        @Html.ValidationMessageFor(m => m.HoursRead)
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="form-group formField">
+                                        <label for="AddReadingMinutes">Minutes:</label>
+                                        @Html.TextBoxFor(m => m.MinutesRead, new { @class = "form-control form-control-sm border-color-2" })
+                                        @Html.ValidationMessageFor(m => m.MinutesRead)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group formField">
+                                <label for="SelectBook">Book Type</label>
+                                <div class="dropGeneral roundOne border-color-2">
+                                    <select name="Type" id="Type" class="select-drop">
+                                        <option value="Paper">Paper</option>
+                                        <option value="Digital">Digital</option>
+                                        <option value="Audiobook">Audiobook</option>
+                                        <option value="Read-Aloud (Reader)">Read-Aloud (Reader)</option>
+                                        <option value="Read-Aloud (Listener)">Read-Aloud (Listener)</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                    </div>
+                                </div>
+                                <label for="SelectBook">Book Status</label>
+                                <div class="dropGeneral roundOne border-color-2">
+                                    <select name="Status" id="Status" class="select-drop">
+                                        <option value="Active">Active</option>
+                                        <option value="Completed">Completed</option>
+                                        <option value="Inactive">No Longer Reading</option>
+                                    </select>
+                                </div>
+                                <div style="text-align: center;">
+                                    <button type="submit" class="btn btn-md bg-color-3 border-color-3">Submit</button>
+                                </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8 col-sm-6 col-xs-12">
+                <div class="panel panel-default border-color-2">
+
+                    <div class="panel-heading bg-color-2 border-color-2">
+                        <h3 class="panel-title" style="color:white">Progress To Prizes</h3>
+                    </div>
+                    <div class="panel-body">
+                        @foreach (var item in Model.PrizeList)
+                        {
+                            if (item.PercentProgress <= 100)
+                            {
+                        <div>@item.Title</div>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-info progress-bar-striped active animated fadeInLeft"
+                                         role="progressbar" style="width: @item.PercentProgress%">@((item.PercentProgress / 100).ToString("P"))</div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div>@item.Title</div>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-success animated fadeInLeft"
+                                             role="progressbar" style="width: 100%">100%</div>
+                                    </div>
+                                }
+                            }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8 col-sm-6 col-xs-12">
+                @*<div class="panel panel-default border-color-5">
+                    <div class="panel-heading bg-color-5 border-color-5">
+                        <h3 class="panel-title" style="color:white">Reading Log</h3>
+                    </div>
+                    <div class="panel-body">*@
+                        <div class="table-responsive">
+                            <table class="table table-curved border-color-1">
+                                <thead>
+                                    <tr class="border-color-4" style="color:white;">
+                                        <th class="col-sm-3 bg-color-1 border-color-1">Title</th>
+                                        <th class="col-sm-3 bg-color-1 border-color-1">Reading Time</th>
+                                        <th class="col-sm-3 bg-color-1 border-color-1">Reading Format</th>
+                                        <th class="col-sm-3 bg-color-1 border-color-1">Reading Date</th>
+                                        <th class="col-sm-3 bg-color-1 border-color-1">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.ReadingLogs)
+                                    {
+                                        var hoursRead = item.MinutesRead / 60;
+                                        var minRead = item.MinutesRead % 60;
+                                    <tr>
+                                        <td class="border-color-1">@item.Title</td>
+                                        @if (@item.MinutesRead >= 60)
+                                        {
+                                            <td class="border-color-1">
+                                                @hoursRead Hours
+                                                @minRead Minutes
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td class="border-color-1">
+                                                @item.MinutesRead Minutes
+                                            </td>
+                                        }
+                                            
+                                            <td class="border-color-1">@item.Type</td>
+                                            <td class="border-color-1">@item.Date.ToString("M/d/yy")</td>
+                                            <td class="border-color-1">
+                                                @item.Status
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    @*</div>
+                </div>*@
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="~/Content/UserActivityJQuery.js"></script>
