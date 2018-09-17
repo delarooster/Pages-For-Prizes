@@ -32,6 +32,58 @@ namespace Capstone.Web.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+
+        public ActionResult LoginAsDefault()
+        {
+            ActionResult result = null;
+
+            if (!ModelState.IsValid)
+            {
+                result = View("Index");
+            }
+            else
+            {
+                User user = _db.GetUserByUsername("adelarosa");
+
+                if (user.Username == null || user.Password == null)
+                {
+                    ModelState.AddModelError("invalid-credentials", "An invalid username or password was provided");
+                    result = View("Index");
+                }
+                else
+                {
+                    PasswordHash ph = new PasswordHash("1234asdf", user.Salt);
+
+                    if (user == null)
+                    {
+                        ModelState.AddModelError("invalid-credentials", "An invalid username or password was provided");
+                        result = View("Index");
+                    }
+                    else if (ph.Hash != user.Password)
+                    {
+                        ModelState.AddModelError("invalid-credentials", "An invalid username or password was provided");
+                        result = View("Index");
+                    }
+                    else if (ph.Hash == user.Password)
+                    {
+                        FormsAuthentication.SetAuthCookie(user.Username, true);
+                        Session["User"] = user;
+
+                        if (((User)Session["User"]).RoleID == 2 || ((User)Session["User"]).RoleID == 3)
+                        {
+                            result = RedirectToAction("UserActivity", "Home");
+                        }
+                        else
+                        {
+                            //page not found
+                            //need to return Admin view
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+
         public ActionResult FamilyActivity(int? id)
         {
             List<User> userList = new List<User>();
@@ -206,6 +258,7 @@ namespace Capstone.Web.Controllers
 
             return result;
         }
+        
 
         [HttpPost]
         public ActionResult Register(RegisterViewModel model)
