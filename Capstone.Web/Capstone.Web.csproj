@@ -500,6 +500,7 @@
     <Content Include="DatabaseScripts\schema.sql" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\additional-methods.min.js" />
+    <Content Include="Scripts\booksearch.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -547,6 +548,7 @@
     <None Include="Properties\PublishProfiles\pages-for-prizes - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\pages-for-prizes - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\getisbn.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
